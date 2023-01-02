@@ -1,3 +1,10 @@
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import static java.lang.System.exit;
+
 public class Appuntamento {
     private String data;
     private String cf_paziente; //codice fiscale paziente
@@ -81,4 +88,37 @@ public class Appuntamento {
                 ", ora_fine=" + ora_fine +
                 '}';
     }
-}
+    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda){
+        //medico che registrerà appuntamento
+        Medico medico= null;
+        medico = medico.login(tastiera);
+        String prova = tastiera.nextLine();
+        System.out.println("Registra nuovo  appuntamento");
+        System.out.println("inserisci data");
+        String data = tastiera.nextLine();
+        System.out.println("inserisci codice fiscale del paziente");
+        String cf_paziente = tastiera.nextLine();
+        System.out.println("Inserisci id dottore");
+        String id_dottore = tastiera.nextLine();
+        System.out.println("inserisci descrizione");
+        String descrizione = tastiera.nextLine();
+        System.out.println("inserisci ora inizio");
+        int ora_inizio = tastiera.nextInt();
+        System.out.println("inserisci ora fine");
+        int ora_fine = tastiera.nextInt();
+        System.out.println(ora_fine);
+
+        Appuntamento a = new Appuntamento(data,cf_paziente,id_dottore,descrizione, ora_inizio, ora_fine);
+        System.out.println("vuoi salvare il seguente appuntamento in agenda? [si/no]");
+        prova = tastiera.nextLine();
+        String risposta = tastiera.nextLine();
+        if(risposta.toUpperCase().equals("SI"))
+            agenda.InsericiAppuntamentoInAgenda(medico.getId_medico(), a);
+        else exit(0);
+
+
+
+        }
+
+    }
+
