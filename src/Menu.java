@@ -43,7 +43,8 @@ public class Menu {
                     }
                 }
                 case 2: {
-                    System.out.println(agenda);
+                    for(int i = 0; i<2; i++)
+                    System.out.println(agenda.toStamp(i));
                 }
             }
 

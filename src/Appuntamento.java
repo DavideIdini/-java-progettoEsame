@@ -1,12 +1,11 @@
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+import java.text.DateFormat;
+import java.text.ParseException;
 
 import static java.lang.System.exit;
 
 public class Appuntamento {
-    private String data;
+    private Date data;
     private String cf_paziente; //codice fiscale paziente
     private String id_medico; //id medico che svolgerà la visita o la terapia
     private String descrizione;
@@ -16,7 +15,7 @@ public class Appuntamento {
 
 
 
-    public Appuntamento(String data, String cf_paziente, String id_medico, String descrizione, int ora_inizio, int ora_fine) {
+    public Appuntamento(Date data, String cf_paziente, String id_medico, String descrizione, int ora_inizio, int ora_fine) {
         this.data = data;
         this.cf_paziente = cf_paziente;
         this.id_medico = id_medico;
@@ -43,7 +42,7 @@ public class Appuntamento {
         return ora_fine;
     }
 
-    public String getData() {
+    public Date getData() {
         return data;
     }
 
@@ -61,7 +60,7 @@ public class Appuntamento {
 
 
 
-    public void setData(String data) {
+    public void setData(Date data) {
         this.data = data;
     }
 
@@ -94,8 +93,7 @@ public class Appuntamento {
         medico = medico.login(tastiera);
         String prova = tastiera.nextLine();
         System.out.println("Registra nuovo  appuntamento");
-        System.out.println("inserisci data");
-        String data = tastiera.nextLine();
+        Date data = inserimentoData();
         System.out.println("inserisci codice fiscale del paziente");
         String cf_paziente = tastiera.nextLine();
         System.out.println("Inserisci id dottore");
@@ -120,5 +118,25 @@ public class Appuntamento {
 
         }
 
+    private static Date inserimentoData() {
+        String s;
+        Date d = null;
+        //si procura la data sotto forma di una stringa nel formato SHORT
+        System.out.println("Inserisci la data [gg/mm/yyyy]: ");
+        Scanner in = new Scanner(System.in);
+        s = in.nextLine();
+        //converte la stringa della data in un oggetto di classe Date
+        try{
+            DateFormat formatoData = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALY);
+            //imposta che i calcoli di conversione della data siano rigorosi
+            formatoData.setLenient(false);
+            d = formatoData.parse(s);
+        } catch (ParseException e) {
+            System.out.println("Formato data non valido.");
+        }
+
+        return d;
     }
+
+}
 

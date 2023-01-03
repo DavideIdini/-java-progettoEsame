@@ -21,7 +21,7 @@ public class Agenda{
  }
  public void InsericiAppuntamentoInAgenda(int id_medico,Appuntamento appuntamento){
 
-  if(appuntamenti_per_medico.isEmpty() || appuntamenti_per_medico.get(id_medico).isEmpty()){
+  if( appuntamenti_per_medico.isEmpty() || appuntamenti_per_medico.get(id_medico)==null){
       List<Appuntamento> a = new ArrayList<>();
       a.add(appuntamento);
       appuntamenti_per_medico.put(id_medico, a);
@@ -44,8 +44,10 @@ public class Agenda{
  private boolean controlloDisponibilita(List<Appuntamento> appuntamenti, Appuntamento appuntamento) {
   Scanner tastiera = new Scanner(System.in);
   for(Appuntamento d: appuntamenti){
-   if(d.getOra_inizio()<appuntamento.getOra_inizio() && appuntamento.getOra_inizio()<d.getOra_fine()
-           || d.getOra_inizio()<appuntamento.getOra_fine() && appuntamento.getOra_fine()<d.getOra_fine() ){
+   if(d.getOra_inizio()<=appuntamento.getOra_inizio() && appuntamento.getOra_inizio()<d.getOra_fine()
+           && d.getOra_inizio()<appuntamento.getOra_fine() && appuntamento.getOra_fine()<=d.getOra_fine()
+           && d.getData().equals(appuntamento.getData())
+           || d.getOra_inizio()==appuntamento.getOra_inizio()){
     System.out.println("L'orario selezionato per questo appuntamento non è disponibile scegliere un altro orario");
     System.out.println("inserisci ora inizio");
     appuntamento.setOra_inizio(tastiera.nextInt());
@@ -58,10 +60,10 @@ public class Agenda{
   return true;
  }
 
- @Override
- public String toString() {
-  return "Agenda{" +
-          "appuntamenti_per_medico=" + appuntamenti_per_medico+
+
+ public String toStamp(int n) {
+  return "\n Agenda{ " +
+          "appuntamenti per medico = " + appuntamenti_per_medico.get(n)+
           '}';
  }
 }
