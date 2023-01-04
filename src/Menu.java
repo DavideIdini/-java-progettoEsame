@@ -1,5 +1,7 @@
 import java.util.*;
 
+import static java.lang.System.exit;
+
 public class Menu {
 
     private final static String INTRO = "Benvenuto nell'app per la gestione degli appuntamenti del centro medico \n" +
@@ -8,7 +10,8 @@ public class Menu {
             "2) Modifica appuntamento\n"+
             "3) Elimina appuntamento\n"+
             "4) Ricerca appuntamenti\n"+
-            "5) Calcola statistiche\n";
+            "5) Calcola statistiche\n"+
+            "6) Esci";
     public static void main(String[] args) {
         //dichiarazione variabili
         Map<Integer, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
@@ -43,8 +46,11 @@ public class Menu {
                     }
                 }
                 case 2: {
-                    for(int i = 0; i<2; i++)
-                    System.out.println(agenda.toStamp(i));
+                    agenda = agenda.modificaAppuntamento(agenda);
+                    break;
+                }
+                case 6: {
+                    exit(1);
                 }
             }
 

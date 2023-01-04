@@ -66,4 +66,22 @@ public class Agenda{
           "appuntamenti per medico = " + appuntamenti_per_medico.get(n)+
           '}';
  }
+
+ public Agenda modificaAppuntamento(Agenda agenda) {
+  Scanner tastiera = new Scanner(System.in);
+  System.out.println("inserisci id medico del quale si vuole modificare appuntamento");
+  int id_medico = tastiera.nextInt();
+  List<Appuntamento> appuntamentoPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
+  System.out.println(agenda.getAppuntamentiPerMedico().get(id_medico).toString());
+  System.out.println("inserisci numero appuntamento");
+  int a = tastiera.nextInt();
+  agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
+  Appuntamento appuntamento;
+  appuntamento = Appuntamento.creaAppuntamento();
+  appuntamentoPerMedico.add(appuntamento);
+  appuntamenti_per_medico.replace(id_medico, appuntamentoPerMedico);
+
+
+  return agenda;
+ }
 }
