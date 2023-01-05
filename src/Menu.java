@@ -45,13 +45,11 @@ public class Menu {
 
                     }
                 }
-                case 2: {
-                    agenda = agenda.modificaAppuntamento(agenda);
-                    break;
-                }
-                case 6: {
-                    exit(1);
-                }
+                case 2: { agenda.modificaAppuntamento(agenda); break;}
+                case 3 : { agenda.eliminaAppuntamento(agenda); break;}
+                case 4 : { agenda.ricercaAppuntamenti(agenda); break;}
+                case 6: {exit(1);}
+
             }
 
         }

@@ -1,3 +1,5 @@
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +69,7 @@ public class Agenda{
           '}';
  }
 
- public Agenda modificaAppuntamento(Agenda agenda) {
+ public void modificaAppuntamento(Agenda agenda) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole modificare appuntamento");
   int id_medico = tastiera.nextInt();
@@ -81,7 +83,89 @@ public class Agenda{
   appuntamentoPerMedico.add(appuntamento);
   appuntamenti_per_medico.replace(id_medico, appuntamentoPerMedico);
 
+ }
 
-  return agenda;
+ public void eliminaAppuntamento(Agenda agenda) {
+  Scanner tastiera = new Scanner(System.in);
+  System.out.println("inserisci id medico del quale si vuole eliminare appuntamento");
+  int id_medico = tastiera.nextInt();
+  List<Appuntamento> appuntamentoPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
+  System.out.println(agenda.getAppuntamentiPerMedico().get(id_medico).toString());
+  System.out.println("inserisci numero appuntamento da eliminare");
+  int a = tastiera.nextInt();
+  agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
+  System.out.println("appuntamento eliminato");
+ }
+
+ public void ricercaAppuntamenti(Agenda agenda) {
+  Scanner tastiera = new Scanner(System.in);
+  System.out.println("inserisci id medico del quale si vuole effettuare una ricerca di appuntamente");
+  int id_medico = tastiera.nextInt();
+  List<Appuntamento> appuntamentiPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
+  System.out.println("in base a cosa vuoi effettuare la ricerca ?"+
+                   "\n1) codice fiscale paziente\n2)data\n3)ora inizio");
+  int scelta = tastiera.nextInt();
+  switch (scelta) {
+   case 1 : { ricercaPerCodiceFiscale(appuntamentiPerMedico); break;}
+   case 2 : { ricercaPerData(appuntamentiPerMedico); break;}
+   case 3 : { ricercaPerOraInizio(appuntamentiPerMedico); break;}
+  }
+ }
+
+ private void ricercaPerOraInizio(List<Appuntamento> appuntamentiPerMedico) {
+  Scanner tastiera = new Scanner(System.in);
+  System.out.println("inserisci l'ora inizo dell'appuntamento che vuoi ricercare");
+  int oraI = tastiera.nextInt();
+  int c = 0;
+  for (Appuntamento a : appuntamentiPerMedico) {
+   if (a.getOra_inizio()==oraI) {
+    System.out.println("ho trovato un appuntamento con quest'ora inizio -->" + a.toString() + "\ned ha indice " + c);
+   }
+   c++;
+  }
+ }
+
+ private void ricercaPerData(List<Appuntamento> appuntamentiPerMedico) {
+  Scanner tastiera = new Scanner(System.in);
+  System.out.println("inserisci data che vuoi ricercare");
+  Date d = inserimentoData();
+  int c = 0;
+  for (Appuntamento a : appuntamentiPerMedico) {
+   if (a.getData().equals(d)) {
+    System.out.println("ho trovato un appuntamento con questa data -->" + a.toString() + "\ned ha indice " + c);
+   }
+   c++;
+  }
+ }
+ private static Date inserimentoData() {
+  String s;
+  Date d = null;
+  //si procura la data sotto forma di una stringa nel formato SHORT
+  System.out.println("Inserisci la data [gg/mm/yyyy]: ");
+  Scanner in = new Scanner(System.in);
+  s = in.nextLine();
+  //converte la stringa della data in un oggetto di classe Date
+  try{
+   DateFormat formatoData = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALY);
+   //imposta che i calcoli di conversione della data siano rigorosi
+   formatoData.setLenient(false);
+   d = formatoData.parse(s);
+  } catch (ParseException e) {
+   System.out.println("Formato data non valido.");
+  }
+
+  return d;
+ }
+ private void ricercaPerCodiceFiscale(List<Appuntamento> appuntamentiPerMedico) {
+  Scanner tastiera = new Scanner(System.in);
+  System.out.println("inserisci codice fiscale paziente che vuoi ricercare");
+  String codiceFiscaleR = tastiera.nextLine();
+  int c=0;
+  for(Appuntamento a: appuntamentiPerMedico){
+   if(a.getCf_paziente().toUpperCase().equals(codiceFiscaleR.toUpperCase())){
+    System.out.println("ho trovato un appuntamento con questo codice fiscale -->"+a.toString()+"\ned ha indice "+c);
+   }
+   c++;
+  }
  }
 }
