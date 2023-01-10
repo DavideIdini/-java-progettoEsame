@@ -85,7 +85,7 @@ public class Agenda{
 
  }
 
- public void eliminaAppuntamento(Agenda agenda) {
+ public void eliminaAppuntamento(Agenda agenda, List<WaitList> waitList) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole eliminare appuntamento");
   int id_medico = tastiera.nextInt();
@@ -93,8 +93,35 @@ public class Agenda{
   System.out.println(agenda.getAppuntamentiPerMedico().get(id_medico).toString());
   System.out.println("inserisci numero appuntamento da eliminare");
   int a = tastiera.nextInt();
+  Appuntamento appuntamento = agenda.getAppuntamentiPerMedico().get(id_medico).get(a);
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   System.out.println("appuntamento eliminato");
+  System.out.println("controllo se ci sono pazienti in lista d'attesa per la data selezionata");
+  controlloWaitList(appuntamento,waitList,agenda);
+
+ }
+
+ private void controlloWaitList(Appuntamento appuntamento, List<WaitList> waitList, Agenda agenda) {
+  Scanner tastiera = new Scanner(System.in);
+   for(WaitList a: waitList){
+    if(appuntamento.getId_medico().equals(a.getIdMedico())
+            && appuntamento.getData().equals(a.getData())
+            && a.getOraInizio()>=appuntamento.getOra_inizio()
+            && a.getOraFine()<=appuntamento.getOra_fine()) {
+     System.out.println("un paziente è in attesa per la data e l'ora selezionata vuoi contattarlo? [si/tutto il resto no]");
+     String risposta = tastiera.nextLine();
+     if (risposta.toUpperCase().equals("SI")) {
+      System.out.println(a.getPazienteInAttesa().getCellulare()+"\n"+a.getPazienteInAttesa().getEmail());
+      System.out.println("Il paziente è ancora disponibile?" );
+      risposta = tastiera.nextLine();
+      if (risposta.toUpperCase().equals("SI")) {
+       Appuntamento sostituto = new Appuntamento(a.getData(),a.getPazienteInAttesa().getCodiceFiscale(),a.getIdMedico(), "sostituzione", a.getOraInizio(), a.getOraFine());
+       agenda.InsericiAppuntamentoInAgenda(Integer.parseInt(a.getIdMedico()), sostituto);
+      }
+     }
+    }
+   }
+
  }
 
  public void ricercaAppuntamenti(Agenda agenda) {

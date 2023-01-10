@@ -119,7 +119,7 @@ public class Appuntamento {
 
         }
 
-    private static Date inserimentoData() {
+    public static Date inserimentoData() {
         String s;
         Date d = null;
         //si procura la data sotto forma di una stringa nel formato SHORT

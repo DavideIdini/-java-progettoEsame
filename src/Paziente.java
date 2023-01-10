@@ -4,11 +4,11 @@ import java.util.Scanner;
 public class Paziente extends Persona{
     private String email;
     private String cellulare;
-    private String id_paziente;
-    private String password;
+   // private String id_paziente;
+   // private String password;
 
 
-    public Paziente(String codiceFiscale, String nome, String cognome, String indirizzo, String email, String cellulare, String id_paziente, String password) {
+    public Paziente(String codiceFiscale, String nome, String cognome, String indirizzo, String email, String cellulare) {
         super(codiceFiscale, nome, cognome, indirizzo);
         this.email = email;
         this.cellulare = cellulare;
@@ -29,8 +29,8 @@ public class Paziente extends Persona{
     public void setCellulare(String cellulare) {
         this.cellulare = cellulare;
     }
-
-    public String getId_paziente() {
+//implementazione futura in pausa per ora
+ /*   public String getId_paziente() {
         return id_paziente;
     }
 
@@ -44,20 +44,18 @@ public class Paziente extends Persona{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-     public static List<Paziente> JoinWaitList(List<Paziente> waitList){
+    }*/
+    public static Paziente registrazionePaziente(){
         Scanner tastiera = new Scanner(System.in);
-        Paziente a = null;
-        System.out.println("inserisc dati paziente da aggiungere alla waitList"+"\n codice fiscale \n nome \n cognome \n indirizzo \n email \n cellulare ");
-         a.setCodiceFiscale(tastiera.nextLine());
-         a.setNome(tastiera.nextLine());
-         a.setCognome(tastiera.nextLine());
-         a.setIndirizzo(tastiera.nextLine());
-         a.setEmail(tastiera.nextLine());
-         a.setCellulare(tastiera.nextLine());
-         waitList.add(a);
+        System.out.println("inserimento dati paziente\n-codice fiscale\n-nome\n-cognome\n-indirizzo\n-email\n-cellulare");
+        String cf = tastiera.nextLine();
+        String nome = tastiera.nextLine();
+        String cognome = tastiera.nextLine();
+        String indirizzo = tastiera.nextLine();
+        String email = tastiera.nextLine();
+        String cellulare= tastiera.nextLine();
+        Paziente paziente = new Paziente(cf, nome, cognome, indirizzo, email, cellulare );
 
-
-        return waitList;
-     }
+        return paziente;
+    }
 }
