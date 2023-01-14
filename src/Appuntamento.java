@@ -92,7 +92,7 @@ public class Appuntamento {
         System.out.println("Registra nuovo  appuntamento");
         Date data = inserimentoData();
         System.out.println("inserisci codice fiscale del paziente");
-        String cf_paziente = tastiera.nextLine();
+        String cf_paziente = inserimentoCFPaziente();
         System.out.println("Inserisci id dottore");
         String id_dottore = tastiera.nextLine();
         System.out.println("inserisci descrizione");
@@ -106,15 +106,71 @@ public class Appuntamento {
         Appuntamento a = new Appuntamento(data,cf_paziente,id_dottore,descrizione, ora_inizio, ora_fine);
         return a;
     }
-    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda){
-        Medico medico= null;
-        medico = medico.login(tastiera);
+
+    public static String inserimentoCFPaziente() {
+        Scanner tastiera = new Scanner(System.in);
+
+        while (true) {
+
+            System.out.print("Inserisci codice fiscale : ");
+            String codiceFiscale = tastiera.nextLine();
+            try {
+
+                if (codiceFiscale.length() != 16) {
+                    throw new Exception("Codice fiscale non valido. Il codice fiscale deve avere 16 caratteri.");
+                }
+
+                for (int i = 0; i < 6; i++) {
+                    if (!Character.isLetter(codiceFiscale.charAt(i))) {
+                        throw new Exception("Codice fiscale non valido. I primi sei caratteri devono essere alfabetici.");
+                    }
+                }
+                for (int i = 6; i < 8; i++) {
+                    if (!Character.isDigit(codiceFiscale.charAt(i))) {
+                        throw new Exception("codice fiscale non valido. I caratteri 7 e 8 devono essere numerici");
+                    }
+                }
+                if (!Character.isLetter(codiceFiscale.charAt(8))) {
+                    throw new Exception("codice fiscale non valido. Il carattere 9 deve essere alfabetico");
+                }
+                for (int i = 9; i < 11; i++) {
+                    if (!Character.isDigit(codiceFiscale.charAt(i))) {
+                        throw new Exception("codice fiscale non valido. I caratteri 10 e 11 devono essere numerici.");
+                    }
+                }
+                if (!Character.isLetter(codiceFiscale.charAt(11))) {
+                    throw new Exception("codice fiscale non valido. Il carattere 12 deve essere alfabetico");
+                }
+
+                for (int i = 12; i < 15; i++) {
+                    if (!Character.isDigit(codiceFiscale.charAt(i))) {
+                        throw new Exception("codice fiscale non valido. I caratteri dal 13 al 15 devono essere numerici .");
+                    }
+                }
+
+
+                if (!Character.isLetter(codiceFiscale.charAt(15))) {
+                    throw new Exception("codice fiscale non valido. L'ultimo carattere deve essere alfabetico");
+                }
+
+                System.out.println("Codice fiscale valido");
+                return codiceFiscale;
+            } catch (Exception e) {
+
+                System.out.println(e.getMessage());
+            }
+        }
+
+    }
+
+    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda,Medico medicoOperante){
+
         Appuntamento appuntamento = creaAppuntamento();
         System.out.println("vuoi salvare il seguente appuntamento in agenda? [si/no]");
         String prova = tastiera.nextLine();
         String risposta = tastiera.nextLine();
         if(risposta.toUpperCase().equals("SI"))
-            agenda.InsericiAppuntamentoInAgenda(medico.getId_medico(), appuntamento);
+            agenda.InsericiAppuntamentoInAgenda(medicoOperante.getId_medico(), appuntamento);
         else exit(0);
 
         }
