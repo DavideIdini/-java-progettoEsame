@@ -34,13 +34,36 @@ public class Menu {
         Scanner tastiera = new Scanner(System.in);
         while(true){
             System.out.println(PREINTRO);
-            int scelta = tastiera.nextInt();
-            switch (scelta)
-            {   case 4: {exit(1);}
-                case 1: {medici.add(Medico.registrazioneMedico());break;}
-                case 2: {medicoOperante= Medico.loginMedico(medici); return medicoOperante;}
-                case 3 : {paziente.add(Paziente.registrazionePaziente()); break;}
-
+            try {
+                String scelta = tastiera.nextLine();
+                switch (Integer.parseInt(scelta)) {
+                    case 4: {
+                        exit(1);
+                    }
+                    case 1: {
+                        medici.add(Medico.registrazioneMedico());
+                        break;
+                    }
+                    case 3: {
+                        paziente.add(Paziente.registrazionePaziente());
+                        break;
+                    }
+                    case 2: {
+                        medicoOperante = Medico.loginMedico(medici);
+                        if(medicoOperante.equals(null))
+                            throw new NullPointerException("Problemi con il login\n");
+                        return medicoOperante;
+                    }
+                    default:{
+                        throw new Exception("devi inserire un numero da 1 a 4");
+                    }
+                }
+            }catch(NullPointerException e){
+                System.out.println("Il login NON è avvenuto con successo");
+            }catch (NumberFormatException e){
+                System.out.println("devi inserire un numero compreso tra 1 e 4");
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
 
         }
@@ -50,18 +73,42 @@ public class Menu {
 
     private static void menu(Agenda agenda, List<WaitList> waitList, Medico medicoOperante) {
         Scanner tastiera = new Scanner(System.in);
-        while(true){
-            System.out.println(INTRO);
-            int scelta = tastiera.nextInt();
-            switch (scelta)
-            {   case 7: {exit(1);}
-                case 1: {Appuntamento.creaAppuntamenti(tastiera,agenda,medicoOperante);break;}
-                case 2: { agenda.modificaAppuntamento(agenda); break;}
-                case 3 : { agenda.eliminaAppuntamento(agenda,waitList); break;}
-                case 4 : { agenda.ricercaAppuntamenti(agenda); break;}
-                case 6 : { waitList.add(WaitList.joinWaitList());}
-            }
+        while(true) {
+            try {
+                System.out.println(INTRO);
+                String scelta = tastiera.nextLine();
+                switch (Integer.parseInt(scelta)) {
+                    case 7: {
+                        exit(1);
+                    }
+                    case 1: {
+                        Appuntamento.creaAppuntamenti(tastiera, agenda, medicoOperante);
+                        break;
+                    }
+                    case 2: {
+                        agenda.modificaAppuntamento(agenda);
+                        break;
+                    }
+                    case 3: {
+                        agenda.eliminaAppuntamento(agenda, waitList);
+                        break;
+                    }
+                    case 4: {
+                        agenda.ricercaAppuntamenti(agenda);
+                        break;
+                    }
+                    case 6: {
+                        waitList.add(WaitList.joinWaitList());
+                    }
+                    default:{
+                        throw new Exception("devi inserire un numero da 1 a 7");
+                    }
+                }
 
+            }catch (Exception e) {
+                System.out.println(e.getMessage());
+
+            }
         }
     }
 

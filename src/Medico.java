@@ -85,26 +85,46 @@ public class Medico extends Persona{
                 '}';
     }
     public static Medico loginMedico(List<Medico> medici) {
-        Scanner tastiera = new Scanner(System.in);
-        System.out.println("Inserisci id medico");
-        int id = tastiera.nextInt();
-        System.out.println("Inserisci password");
-        String prova = tastiera.nextLine();
-        String pass = tastiera.nextLine();
-        System.out.println("prova"+prova);
-        System.out.println("pass"+pass);
-        for(Medico a : medici){
-            System.out.println("stampo un medico"+a.toString());
-            if(a.getId_medico()==id && a.getPassword().equals(pass))
-                return a;
+        if(medici.isEmpty()){
+            System.out.println("Ancora nessun medico registrato");
+            return null;
+        }
+        boolean flag = true;
+        while(flag){
+            try {
+                Scanner tastiera = new Scanner(System.in);
+                System.out.println("Inserisci id medico");
+                String id = tastiera.nextLine();
+                if(id.isEmpty() || id.length()>2 )
+                    throw new Exception("id non valido. Deve avere massimo due numeri");
+                if(Character.isAlphabetic(id.charAt(0)))
+                    throw new Exception("id non valido. L'id non puo contenere caratteri alfabetici");
+                if(Character.isAlphabetic(id.charAt(1)))
+                    throw new Exception("id non valido. L'id non puo contenere caratteri alfabetici");
+
+                System.out.println("Inserisci password");
+                String pass = tastiera.nextLine();
+
+                for (Medico a : medici){
+                    if ( a.getId_medico() == Integer.parseInt(id) && a.getPassword().equals(pass)){
+                        System.out.println("login effettuato con successo");
+                        return a;
+
+                    } else
+                        throw new Exception(" Id o Password sbagliata ");
+                }
+
+            }catch(Exception e){
+                Scanner tastiera = new Scanner(System.in);
+                System.out.println(e.getMessage()+" digita si se vuoi riprovare a effettuare il login");
+                String risposta = tastiera.nextLine();
+                if(!risposta.toUpperCase().equals("SI"))
+                    flag = false;
+
+            }
+
         }
         return null;
     }
-   // public static Medico login(Scanner tastiera) {
-   //     System.out.println("inserisci codice fiscale medico\n"+"inserisci nome medico\n"+"inserisci cognome medico\n"+"inserisci indirizzo medico\n"+"inserisci id medico");
-    //    String prova = tastiera.nextLine();
-     //   Medico medico = new Medico(tastiera.nextLine(),tastiera.nextLine(),tastiera.nextLine(),tastiera.nextLine(),tastiera.nextInt());
-    //    return medico;
 
-   // }
 }
