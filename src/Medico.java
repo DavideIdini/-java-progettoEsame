@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.List;
 import java.util.Scanner;
 
-public class Medico extends Persona{
+public class Medico extends Persona implements Serializable {
 
     private int id_medico;
     private String password;

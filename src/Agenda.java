@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -6,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.*;
 
-public class Agenda{
+public class Agenda implements Serializable {
 
  private Map<Integer, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
 
@@ -85,7 +86,7 @@ public class Agenda{
 
  }
 
- public void eliminaAppuntamento(Agenda agenda, List<WaitList> waitList) {
+ public void eliminaAppuntamento(Agenda agenda, List<Wait> waitList) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole eliminare appuntamento");
   int id_medico = tastiera.nextInt();
@@ -101,9 +102,9 @@ public class Agenda{
 
  }
 
- private void controlloWaitList(Appuntamento appuntamento, List<WaitList> waitList, Agenda agenda) {
+ private void controlloWaitList(Appuntamento appuntamento, List<Wait> waitList, Agenda agenda) {
   Scanner tastiera = new Scanner(System.in);
-   for(WaitList a: waitList){
+   for(Wait a: waitList){
     if(appuntamento.getId_medico().equals(a.getIdMedico())
             && appuntamento.getData().equals(a.getData())
             && a.getOraInizio()>=appuntamento.getOra_inizio()

@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class WaitList {
+public class Wait implements Serializable {
     public Paziente pazienteInAttesa;
     public Date data;
     public int oraInizio;
@@ -10,7 +11,7 @@ public class WaitList {
     public String idMedico;
 
 
-    public WaitList(Paziente pazienteInAttesa, Date data, int oraInizio, int oraFine, String idMedico) {
+    public Wait(Paziente pazienteInAttesa, Date data, int oraInizio, int oraFine, String idMedico) {
         this.pazienteInAttesa = pazienteInAttesa;
         this.data = data;
         this.oraInizio = oraInizio;
@@ -57,7 +58,7 @@ public class WaitList {
     public void setIdMedico(String idMedico) {
         this.idMedico = idMedico;
     }
-    public static WaitList joinWaitList(){
+    public static Wait joinWaitList(){
         Scanner tastiera = new Scanner(System.in);
         System.out.println("inserimento dati paziente da aggiungere alla waitList");
         Paziente paziente = Paziente.registrazionePaziente();
@@ -70,7 +71,7 @@ public class WaitList {
         tastiera.nextLine();
         String idM = tastiera.nextLine();
         System.out.println(idM);
-        WaitList a = new WaitList(paziente, date,oraI, oraF, idM );
+        Wait a = new Wait(paziente, date,oraI, oraF, idM );
         return a;
     }
 

@@ -1,8 +1,9 @@
+import java.io.Serializable;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Vector;
 
-public class Paziente extends Persona{
+public class Paziente extends Persona implements Serializable {
     private String email;
     private String cellulare;
    // private String id_paziente;
