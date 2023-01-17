@@ -32,7 +32,7 @@ public class Menu {
             ObjectInputStream inP = new ObjectInputStream(fileInP);
             paziente = (List<Paziente>) inP.readObject();
 
-            FileInputStream fileInM = new FileInputStream("medico");
+           FileInputStream fileInM = new FileInputStream("medico");
             ObjectInputStream inM = new ObjectInputStream(fileInM);
             medico = (List<Medico>) inM.readObject();
 
@@ -46,18 +46,18 @@ public class Menu {
 
 
 
-          /*  inA.close();
+          inA.close();
             fileInA.close();
             inP.close();
             fileInP.close();
-            inM.close();
+           inM.close();
             fileInM.close();
             inW.close();
-            fileInW.close();*/
+            fileInW.close();
 
         }catch (IOException i){
-            System.out.println("sono qua");
-            i.getStackTrace();
+            System.out.println("IOException "+i.getMessage());
+
         }catch (ClassNotFoundException c) {
             System.out.println("Classe non trovata.");
             c.printStackTrace();
