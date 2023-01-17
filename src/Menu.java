@@ -20,7 +20,7 @@ public class Menu {
             "6) Aggiungi pazienti alla Wait list\n"+
             "7) Esci";
     public static void main(String[] args) {
-        Map<Integer, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
+        Map<String, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
         Agenda agenda = new Agenda(appuntamenti_per_medico);
         List<Wait>  wait = new ArrayList<>();
         List<Medico> medico = new ArrayList<>();
@@ -63,11 +63,13 @@ public class Menu {
             c.printStackTrace();
             return;
         }
+        for (Medico a : medico){
+            System.out.println(a.getCognome()+a.toString());
+        }
 
 
-        Medico medicoOperante =null;
-        medicoOperante=preIntro(medico,paziente,medicoOperante, agenda, wait);
-        menu(agenda,wait, medicoOperante);
+        Medico medicoOperante=preIntro(medico,paziente,null, agenda, wait);
+        menu(agenda, wait, medicoOperante, medico, paziente );
         salvaDati(medico, paziente, wait, agenda  );
 
     }
@@ -87,7 +89,7 @@ public class Menu {
                         exit(1);
                     }
                     case 1: {
-                        medici.add(Medico.registrazioneMedico());
+                        medici.add(Medico.registrazioneMedico(medici));
                         break;
                     }
                     case 3: {
@@ -146,7 +148,7 @@ public class Menu {
 
 
 
-    private static void menu(Agenda agenda, List<Wait> waitList, Medico medicoOperante) {
+    private static void menu(Agenda agenda, List<Wait> wait, Medico medicoOperante, List<Medico> medico, List<Paziente> paziente) {
         Scanner tastiera = new Scanner(System.in);
         while(true) {
             try {
@@ -154,6 +156,7 @@ public class Menu {
                 String scelta = tastiera.nextLine();
                 switch (Integer.parseInt(scelta)) {
                     case 7: {
+                        salvaDati(medico, paziente,wait,agenda);
                         exit(1);
                     }
                     case 1: {
@@ -165,7 +168,7 @@ public class Menu {
                         break;
                     }
                     case 3: {
-                        agenda.eliminaAppuntamento(agenda, waitList);
+                        agenda.eliminaAppuntamento(agenda, wait);
                         break;
                     }
                     case 4: {
@@ -173,7 +176,7 @@ public class Menu {
                         break;
                     }
                     case 6: {
-                        waitList.add(Wait.joinWaitList());
+                        wait.add(Wait.joinWaitList());
                     }
                     default:{
                         throw new Exception("devi inserire un numero da 1 a 7");

@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 
 import static java.lang.System.exit;
 
-public class Appuntamento {
+public class Appuntamento implements Serializable {
     private Date data;
     private String cf_paziente; //codice fiscale paziente
     private String id_medico; //id medico che svolgerà la visita o la terapia
@@ -87,24 +88,63 @@ public class Appuntamento {
                 ", ora_fine=" + ora_fine +
                 '}';
     }
-    public static Appuntamento creaAppuntamento(){
+    public static Appuntamento creaAppuntamento(String IdMedico){
         Scanner tastiera = new Scanner(System.in);
         System.out.println("Registra nuovo  appuntamento");
         Date data = inserimentoData();
         System.out.println("inserisci codice fiscale del paziente");
         String cf_paziente = inserimentoCFPaziente();
-        System.out.println("Inserisci id dottore");
-        String id_dottore = tastiera.nextLine();
+        String id_dottore = IdMedico;
         System.out.println("inserisci descrizione");
         String descrizione = tastiera.nextLine();
         System.out.println("inserisci ora inizio");
-        int ora_inizio = tastiera.nextInt();
+        int ora_inizio = inserimentoOraInizio();
         System.out.println("inserisci ora fine");
-        int ora_fine = tastiera.nextInt();
+        int ora_fine = inserimentoOraFine(ora_inizio);
 
 
         Appuntamento a = new Appuntamento(data,cf_paziente,id_dottore,descrizione, ora_inizio, ora_fine);
         return a;
+    }
+
+    private static int inserimentoOraFine(int ora_inizio) {
+        Scanner tastiera = new Scanner(System.in);
+        System.out.println("inserisci ora fine appuntamento\n Studio aperto dalle 9 alle 20");
+
+        while(true){
+            int oraF = tastiera.nextInt();
+            try{
+                if(oraF<10 || oraF>20)
+                    throw new Exception("Lo studio è chiuso in questi orari");
+                if(oraF<ora_inizio)
+                    throw new Exception("L'appunatmentop non può svolgersi a ritroso nel tempo");
+                return oraF;
+            } catch(InputMismatchException e){
+                System.out.println(e.getMessage()+"inserisci un'ora fine  valida perfavore");
+            } catch(Exception e){
+                System.out.println(e.getMessage()+"inserisci un'ora  fine valida perfavore");
+            }
+        }
+
+    }
+
+    private static int inserimentoOraInizio() {
+        Scanner tastiera = new Scanner(System.in);
+        System.out.println("inserisci ora inizio appuntamento\n Studio aperto dalle 9 alle 20");
+
+        while(true){
+            int oraI = tastiera.nextInt();
+            try{
+                if(oraI<9 || oraI>19)
+                    throw new Exception("Lo studio è chiuso in questi orari");
+                return oraI;
+            } catch(InputMismatchException e){
+                System.out.println(e.getMessage()+"inserisci un'ora inizo valida perfavore");
+            } catch(Exception e){
+                System.out.println(e.getMessage()+"inserisci un'ora  inizo valida perfavore");
+            }
+        }
+
     }
 
     public static String inserimentoCFPaziente() {
@@ -165,19 +205,20 @@ public class Appuntamento {
 
     public static void creaAppuntamenti(Scanner tastiera, Agenda agenda,Medico medicoOperante){
 
-        Appuntamento appuntamento = creaAppuntamento();
+        Appuntamento appuntamento = creaAppuntamento(medicoOperante.getId_medico());
         System.out.println("vuoi salvare il seguente appuntamento in agenda? [si/no]");
-        String prova = tastiera.nextLine();
         String risposta = tastiera.nextLine();
         if(risposta.toUpperCase().equals("SI"))
             agenda.InsericiAppuntamentoInAgenda(medicoOperante.getId_medico(), appuntamento);
-        else exit(0);
+        else
+            return;
 
         }
 
     public static Date inserimentoData() {
         String s;
         Date d = null;
+        while(true){
         //si procura la data sotto forma di una stringa nel formato SHORT
         System.out.println("Inserisci la data [gg/mm/yyyy]: ");
         Scanner in = new Scanner(System.in);
@@ -193,6 +234,7 @@ public class Appuntamento {
         }
 
         return d;
+    }
     }
 
 }

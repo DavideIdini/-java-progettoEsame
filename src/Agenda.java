@@ -9,20 +9,20 @@ import java.util.*;
 
 public class Agenda implements Serializable {
 
- private Map<Integer, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
+ private Map<String, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
 
- public Agenda(Map<Integer, List<Appuntamento>> appuntamenti_per_medico) {
+ public Agenda(Map<String, List<Appuntamento>> appuntamenti_per_medico) {
   this.appuntamenti_per_medico = appuntamenti_per_medico;
  }
 
- public Map<Integer, List<Appuntamento>> getAppuntamentiPerMedico() {
+ public Map<String, List<Appuntamento>> getAppuntamentiPerMedico() {
   return appuntamenti_per_medico;
  }
 
- public void setAppuntamenti_per_medico(Map<Integer, List<Appuntamento>> appuntamenti_per_medico) {
+ public void setAppuntamenti_per_medico(Map<String, List<Appuntamento>> appuntamenti_per_medico) {
   this.appuntamenti_per_medico = appuntamenti_per_medico;
  }
- public void InsericiAppuntamentoInAgenda(int id_medico,Appuntamento appuntamento){
+ public void InsericiAppuntamentoInAgenda(String id_medico,Appuntamento appuntamento){
 
   if( appuntamenti_per_medico.isEmpty() || appuntamenti_per_medico.get(id_medico)==null){
       List<Appuntamento> a = new ArrayList<>();
@@ -73,14 +73,14 @@ public class Agenda implements Serializable {
  public void modificaAppuntamento(Agenda agenda) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole modificare appuntamento");
-  int id_medico = tastiera.nextInt();
+  String id_medico = tastiera.nextLine();
   List<Appuntamento> appuntamentoPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
   System.out.println(agenda.getAppuntamentiPerMedico().get(id_medico).toString());
   System.out.println("inserisci numero appuntamento");
   int a = tastiera.nextInt();
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   Appuntamento appuntamento;
-  appuntamento = Appuntamento.creaAppuntamento();
+  appuntamento = Appuntamento.creaAppuntamento(id_medico);
   appuntamentoPerMedico.add(appuntamento);
   appuntamenti_per_medico.replace(id_medico, appuntamentoPerMedico);
 
@@ -117,7 +117,7 @@ public class Agenda implements Serializable {
       risposta = tastiera.nextLine();
       if (risposta.toUpperCase().equals("SI")) {
        Appuntamento sostituto = new Appuntamento(a.getData(),a.getPazienteInAttesa().getCodiceFiscale(),a.getIdMedico(), "sostituzione", a.getOraInizio(), a.getOraFine());
-       agenda.InsericiAppuntamentoInAgenda(Integer.parseInt(a.getIdMedico()), sostituto);
+       agenda.InsericiAppuntamentoInAgenda(a.getIdMedico(), sostituto);
       }
      }
     }
@@ -128,7 +128,7 @@ public class Agenda implements Serializable {
  public void ricercaAppuntamenti(Agenda agenda) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole effettuare una ricerca di appuntamente");
-  int id_medico = tastiera.nextInt();
+  String id_medico = tastiera.nextLine();
   List<Appuntamento> appuntamentiPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
   System.out.println("in base a cosa vuoi effettuare la ricerca ?"+
                    "\n1) codice fiscale paziente\n2)data\n3)ora inizio");
