@@ -70,7 +70,7 @@ public class Agenda implements Serializable {
           '}';
  }
 
- public void modificaAppuntamento(Agenda agenda) {
+ public void modificaAppuntamento(Agenda agenda, List<Paziente> paziente) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole modificare appuntamento");
   String id_medico = tastiera.nextLine();
@@ -80,7 +80,7 @@ public class Agenda implements Serializable {
   int a = tastiera.nextInt();
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   Appuntamento appuntamento;
-  appuntamento = Appuntamento.creaAppuntamento(id_medico);
+  appuntamento = Appuntamento.creaAppuntamento(id_medico, paziente);
   appuntamentoPerMedico.add(appuntamento);
   appuntamenti_per_medico.replace(id_medico, appuntamentoPerMedico);
 
@@ -89,7 +89,7 @@ public class Agenda implements Serializable {
  public void eliminaAppuntamento(Agenda agenda, List<Wait> waitList) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole eliminare appuntamento");
-  int id_medico = tastiera.nextInt();
+  String id_medico = tastiera.nextLine();
   List<Appuntamento> appuntamentoPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
   System.out.println(agenda.getAppuntamentiPerMedico().get(id_medico).toString());
   System.out.println("inserisci numero appuntamento da eliminare");

@@ -58,10 +58,10 @@ public class Wait implements Serializable {
     public void setIdMedico(String idMedico) {
         this.idMedico = idMedico;
     }
-    public static Wait joinWaitList(){
+    public static Wait joinWaitList(List<Paziente> pazienti){
         Scanner tastiera = new Scanner(System.in);
         System.out.println("inserimento dati paziente da aggiungere alla waitList");
-        Paziente paziente = Paziente.registrazionePaziente();
+        Paziente paziente = Paziente.registrazionePaziente(pazienti);
         Date date = Appuntamento.inserimentoData();
         System.out.println("inserisci:\n ora inizio\n ora fine\n id medico");
         int oraI= tastiera.nextInt();

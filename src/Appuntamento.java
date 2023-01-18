@@ -3,8 +3,6 @@ import java.util.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 
-import static java.lang.System.exit;
-
 public class Appuntamento implements Serializable {
     private Date data;
     private String cf_paziente; //codice fiscale paziente
@@ -88,12 +86,13 @@ public class Appuntamento implements Serializable {
                 ", ora_fine=" + ora_fine +
                 '}';
     }
-    public static Appuntamento creaAppuntamento(String IdMedico){
+    public static Appuntamento creaAppuntamento(String IdMedico, List<Paziente> paziente){
         Scanner tastiera = new Scanner(System.in);
         System.out.println("Registra nuovo  appuntamento");
         Date data = inserimentoData();
         System.out.println("inserisci codice fiscale del paziente");
         String cf_paziente = inserimentoCFPaziente();
+        cf_paziente = controlloCf(cf_paziente, paziente);//controllo che il codice fiscale corrisponda a un paziente già salvato
         String id_dottore = IdMedico;
         System.out.println("inserisci descrizione");
         String descrizione = tastiera.nextLine();
@@ -106,6 +105,22 @@ public class Appuntamento implements Serializable {
         Appuntamento a = new Appuntamento(data,cf_paziente,id_dottore,descrizione, ora_inizio, ora_fine);
         return a;
     }
+    private static String controlloCf(String cf_paziente, List<Paziente> paziente) {
+        while(true){
+            for(Paziente a : paziente){
+                if(a.getCodiceFiscale().equals(cf_paziente)){
+                    System.out.println("pazienta gia registrato, tutto ok! ");
+                    return a.getCodiceFiscale();
+                }
+            }
+            System.out.println("non ho trovato  nessun paziente che corrisponde a questo codice ficale\n" +
+                    "per favore Registrare prima il paziente poi procedere con l'inserimento dati per l'appuntamento");
+            Paziente a = Paziente.registrazionePaziente(paziente);
+            return a.getCodiceFiscale();
+
+        }
+    }
+
 
     private static int inserimentoOraFine(int ora_inizio) {
         Scanner tastiera = new Scanner(System.in);
@@ -203,9 +218,9 @@ public class Appuntamento implements Serializable {
 
     }
 
-    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda,Medico medicoOperante){
+    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda, Medico medicoOperante, List<Paziente> paziente){
 
-        Appuntamento appuntamento = creaAppuntamento(medicoOperante.getId_medico());
+        Appuntamento appuntamento = creaAppuntamento(medicoOperante.getId_medico(),paziente);
         System.out.println("vuoi salvare il seguente appuntamento in agenda? [si/no]");
         String risposta = tastiera.nextLine();
         if(risposta.toUpperCase().equals("SI"))

@@ -9,7 +9,8 @@ public class Menu {
             "1) Registrare nuovo medico\n"+
             "2) login medico\n"+
             "3) registrare un nuovo paziente\n"+
-            "4) Salva e esci";
+            "4) Salva e esci \n"+
+            "5) Elimina medico";
     private final static String INTRO = "Benvenuto nell'app per la gestione degli appuntamenti del centro medico \n" +
             "che vuoi fare? \n"+
             "1) Nuovo appuntamento \n"+
@@ -18,7 +19,7 @@ public class Menu {
             "4) Ricerca appuntamenti\n"+
             "5) Calcola statistiche\n"+
             "6) Aggiungi pazienti alla Wait list\n"+
-            "7) Esci";
+            "7) Salva e esci";
     public static void main(String[] args) {
         Map<String, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
         Agenda agenda = new Agenda(appuntamenti_per_medico);
@@ -63,10 +64,6 @@ public class Menu {
             c.printStackTrace();
             return;
         }
-        for (Medico a : medico){
-            System.out.println(a.getCognome()+a.toString());
-        }
-
 
         Medico medicoOperante=preIntro(medico,paziente,null, agenda, wait);
         menu(agenda, wait, medicoOperante, medico, paziente );
@@ -93,7 +90,7 @@ public class Menu {
                         break;
                     }
                     case 3: {
-                        paziente.add(Paziente.registrazionePaziente());
+                        paziente.add(Paziente.registrazionePaziente(paziente));
                         break;
                     }
                     case 2: {
@@ -101,6 +98,10 @@ public class Menu {
                         if(medicoOperante.equals(null))
                             throw new NullPointerException("Problemi con il login\n");
                         return medicoOperante;
+                    }
+                    case 5 :{
+                        medici = eliminaMedico(medici);
+                        break;
                     }
                     default:{
                         throw new Exception("devi inserire un numero da 1 a 4");
@@ -115,6 +116,36 @@ public class Menu {
             }
 
         }
+    }
+
+    private static List<Medico> eliminaMedico(List<Medico> medici) {
+        System.out.println("Inserisci id medico da Licenziare");
+        Scanner tastiera = new Scanner(System.in);
+        String id = tastiera.nextLine();
+        int c = 0;
+        int index=0;
+        boolean f = false;
+        for(Medico a : medici){
+            if(a.getId_medico().equals(id)){
+                index = c;
+                f= true;
+            }
+            c++;
+        }
+        if(f == true){
+            System.out.println("Inserire la parola chiave per licenziare un medico");
+            String k= tastiera.nextLine();
+            if(k.equals("LICENZIATO!"))
+            medici.remove(index);
+            else{
+                System.out.println("mi spiace non puoi licenziare, non sei a conoscenza della password segreta");
+                return medici;
+            }
+        }
+
+        else
+            System.out.println("non ho trovato medici con quell'id");
+        return medici;
     }
 
     private static void salvaDati(List<Medico> medico, List<Paziente> paziente, List<Wait> wait, Agenda agenda) {
@@ -160,11 +191,11 @@ public class Menu {
                         exit(1);
                     }
                     case 1: {
-                        Appuntamento.creaAppuntamenti(tastiera, agenda, medicoOperante);
+                        Appuntamento.creaAppuntamenti(tastiera, agenda, medicoOperante, paziente);
                         break;
                     }
                     case 2: {
-                        agenda.modificaAppuntamento(agenda);
+                        agenda.modificaAppuntamento(agenda,paziente);
                         break;
                     }
                     case 3: {
@@ -176,7 +207,7 @@ public class Menu {
                         break;
                     }
                     case 6: {
-                        wait.add(Wait.joinWaitList());
+                        wait.add(Wait.joinWaitList(paziente));
                     }
                     default:{
                         throw new Exception("devi inserire un numero da 1 a 7");
