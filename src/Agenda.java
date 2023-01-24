@@ -47,10 +47,11 @@ public class Agenda implements Serializable {
  private boolean controlloDisponibilita(List<Appuntamento> appuntamenti, Appuntamento appuntamento, List<Paziente> paziente, List<Wait> wait) {
   Scanner tastiera = new Scanner(System.in);
   for(Appuntamento d: appuntamenti){
-   if(d.getOra_inizio()<=appuntamento.getOra_inizio() && appuntamento.getOra_inizio()<d.getOra_fine()
-           && d.getOra_inizio()<appuntamento.getOra_fine() && appuntamento.getOra_fine()<=d.getOra_fine()
-           && d.getData().equals(appuntamento.getData())
-           || (d.getOra_inizio()==appuntamento.getOra_inizio() && d.getData().equals(appuntamento.getData()) )){
+   if( d.getData().equals(appuntamento.getData()) &&
+           (d.getOra_inizio()<=appuntamento.getOra_inizio() && appuntamento.getOra_inizio()<d.getOra_fine()
+           || d.getOra_inizio()<appuntamento.getOra_fine() && appuntamento.getOra_fine()<=d.getOra_fine()
+           || (d.getOra_inizio()==appuntamento.getOra_inizio()
+           ||(appuntamento.getOra_inizio()<=d.getOra_inizio() && appuntamento.getOra_fine()>=d.getOra_fine())))){
     System.out.println("L'orario selezionato per questo appuntamento non è disponibile ");
 
    boolean flag = true;

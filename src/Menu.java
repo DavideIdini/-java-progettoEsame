@@ -215,6 +215,7 @@ public class Menu {
 
                     }
                     case 6: {
+                        System.out.println(wait.toString());
                         wait.add(Wait.joinWaitList(paziente, agenda, medicoOperante,wait,paziente));
                     }
                     default:{

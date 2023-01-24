@@ -85,10 +85,11 @@ public class Wait implements Serializable {
         if(appuntamenti.isEmpty())
             return true;
         for(Appuntamento d: appuntamenti) {
-            if (d.getOra_inizio() <= appuntamento.getOra_inizio() && appuntamento.getOra_inizio() < d.getOra_fine()
-                    && d.getOra_inizio() < appuntamento.getOra_fine() && appuntamento.getOra_fine() <= d.getOra_fine()
-                    && d.getData().equals(appuntamento.getData())
-                    || (d.getOra_inizio() == appuntamento.getOra_inizio() && d.getData().equals(appuntamento.getData()))) {
+            if (d.getData().equals(appuntamento.getData()) &&
+                    (d.getOra_inizio()<=appuntamento.getOra_inizio() && appuntamento.getOra_inizio()<d.getOra_fine()
+                            || d.getOra_inizio()<appuntamento.getOra_fine() && appuntamento.getOra_fine()<=d.getOra_fine()
+                            || (d.getOra_inizio()==appuntamento.getOra_inizio()
+                            ||(appuntamento.getOra_inizio()<=d.getOra_inizio() && appuntamento.getOra_fine()>=d.getOra_fine())))){
                 return false;
             }
 
@@ -98,8 +99,8 @@ public class Wait implements Serializable {
 
     @Override
     public String toString() {
-        return "WaitList{" +
-                "pazienteInAttesa=" + pazienteInAttesa +
+        return "\nWaitList{" +
+                "pazienteInAttesa=" + pazienteInAttesa.getNome() +
                 ", data=" + data +
                 ", oraInizio=" + oraInizio +
                 ", oraFine=" + oraFine +
