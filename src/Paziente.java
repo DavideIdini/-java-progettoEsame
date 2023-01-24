@@ -12,6 +12,16 @@ public class Paziente extends Persona implements Serializable {
         this.cellulare = cellulare;
     }
 
+    public static Paziente ricercaPazientePerCf(List<Paziente> paziente, String cf_paziente) {
+        for (Paziente a : paziente){
+            if(a.getCodiceFiscale().equalsIgnoreCase(cf_paziente))
+                return a;
+        }
+        //non dovremmo mai arrivare qua in teoria, per via dei controlli fatti in precedenza, ma nel caso
+        System.out.println("paziente non trovato registrarlo perfavore");
+        return registrazionePaziente(paziente);
+    }
+
     public String getEmail() {
         return email;
     }
@@ -28,7 +38,6 @@ public class Paziente extends Persona implements Serializable {
         this.cellulare = cellulare;
     }
     public static Paziente registrazionePaziente(List<Paziente> pazienti){
-        Scanner tastiera = new Scanner(System.in);
         String cf = Appuntamento.inserimentoCFPaziente();
         cf = controlloCfPaziente(cf, pazienti);
         if(cf.isEmpty())
@@ -112,7 +121,7 @@ public class Paziente extends Persona implements Serializable {
             try {
                 System.out.println("Inserimento indirizzo");
                 System.out.println("Inserisci città");
-                address[0] = tastiera.nextLine();
+                address[0] = tastiera.nextLine().trim();
                 if (address[0].isEmpty() || address[0].length() == 0) {
                     throw new Exception("Città non valida.");
                 }
@@ -121,7 +130,7 @@ public class Paziente extends Persona implements Serializable {
                         throw new Exception("Città non valida.");
                 }
                 System.out.println("Inserisci via");
-                address[1] = tastiera.nextLine();
+                address[1] = tastiera.nextLine().trim();
                 if (address[1].isEmpty() || address[1].length() == 0) {
                     throw new Exception("Via non valida.");
                 }

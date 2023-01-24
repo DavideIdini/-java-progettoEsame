@@ -26,6 +26,7 @@ public class Menu {
         List<Wait>  wait = new ArrayList<>();
         List<Medico> medico = new ArrayList<>();
         List<Paziente> paziente  = new ArrayList<>();
+        Statistiche statistiche = new Statistiche(agenda, medico);
 
 
         try {
@@ -66,7 +67,7 @@ public class Menu {
         }
 
         Medico medicoOperante=preIntro(medico,paziente,null, agenda, wait);
-        menu(agenda, wait, medicoOperante, medico, paziente );
+        menu(agenda, wait, medicoOperante, medico, paziente, statistiche );
         salvaDati(medico, paziente, wait, agenda  );
 
     }
@@ -148,7 +149,7 @@ public class Menu {
         return medici;
     }
 
-    private static void salvaDati(List<Medico> medico, List<Paziente> paziente, List<Wait> wait, Agenda agenda) {
+    public static void salvaDati(List<Medico> medico, List<Paziente> paziente, List<Wait> wait, Agenda agenda) {
         try {
             FileOutputStream fileOutP = new FileOutputStream("paziente");
             ObjectOutputStream outP = new ObjectOutputStream(fileOutP);
@@ -179,7 +180,7 @@ public class Menu {
 
 
 
-    private static void menu(Agenda agenda, List<Wait> wait, Medico medicoOperante, List<Medico> medico, List<Paziente> paziente) {
+    private static void menu(Agenda agenda, List<Wait> wait, Medico medicoOperante, List<Medico> medico, List<Paziente> paziente, Statistiche statistiche) {
         Scanner tastiera = new Scanner(System.in);
         while(true) {
             try {
@@ -191,7 +192,7 @@ public class Menu {
                         exit(1);
                     }
                     case 1: {
-                        Appuntamento.creaAppuntamenti(tastiera, agenda, medicoOperante, paziente);
+                        Appuntamento.creaAppuntamenti(tastiera, agenda, medicoOperante, paziente, wait);
                         break;
                     }
                     case 2: {
@@ -199,15 +200,22 @@ public class Menu {
                         break;
                     }
                     case 3: {
-                        agenda.eliminaAppuntamento(agenda, wait);
+                        agenda.eliminaAppuntamento(agenda, wait, paziente);
                         break;
                     }
                     case 4: {
                         agenda.ricercaAppuntamenti(agenda);
                         break;
                     }
+                    case 5:{
+                        Statistiche.medicoPiuRichiesto(agenda, medico);
+                        Statistiche.OraPiùRichiesta(agenda, medico);
+                        Statistiche.percentualeSostituzioni(agenda, medico);
+                        break;
+
+                    }
                     case 6: {
-                        wait.add(Wait.joinWaitList(paziente));
+                        wait.add(Wait.joinWaitList(paziente, agenda, medicoOperante,wait,paziente));
                     }
                     default:{
                         throw new Exception("devi inserire un numero da 1 a 7");

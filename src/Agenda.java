@@ -2,27 +2,28 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.*;
 
+import static java.lang.System.exit;
+
 public class Agenda implements Serializable {
-
- private Map<String, List<Appuntamento>> appuntamenti_per_medico = new HashMap<>();
-
+ private final static String frase = "puoi scegliere tra tre opzioni \n" +
+         "che vuoi fare? \n"+
+         "1) provare con orari diversi\n"+
+         "2) provare con una nuova data e nuovi orari\n"+
+         "3) aggiungere l'appuntamento alla lista d'attesa\n"+
+         "4) chiudere il programma \n";
+ private final Map<String, List<Appuntamento>> appuntamenti_per_medico;
  public Agenda(Map<String, List<Appuntamento>> appuntamenti_per_medico) {
   this.appuntamenti_per_medico = appuntamenti_per_medico;
  }
-
- public Map<String, List<Appuntamento>> getAppuntamentiPerMedico() {
-  return appuntamenti_per_medico;
- }
-
- public void setAppuntamenti_per_medico(Map<String, List<Appuntamento>> appuntamenti_per_medico) {
+ public Map<String, List<Appuntamento>> getAppuntamentiPerMedico() {return appuntamenti_per_medico;}
+ /*public void setAppuntamenti_per_medico(Map<String, List<Appuntamento>> appuntamenti_per_medico) {
   this.appuntamenti_per_medico = appuntamenti_per_medico;
- }
- public void InsericiAppuntamentoInAgenda(String id_medico,Appuntamento appuntamento){
+ }*/
+ public void InsericiAppuntamentoInAgenda(String id_medico, Appuntamento appuntamento, List<Paziente> paziente, List<Wait> wait){
 
   if( appuntamenti_per_medico.isEmpty() || appuntamenti_per_medico.get(id_medico)==null){
       List<Appuntamento> a = new ArrayList<>();
@@ -31,9 +32,9 @@ public class Agenda implements Serializable {
       System.out.println("appuntamento fissato nell'orario selezionato");
   }
   else{
-   List<Appuntamento> appuntamenti = new ArrayList<>();
+   List<Appuntamento> appuntamenti;
    appuntamenti=appuntamenti_per_medico.get(id_medico);
-   if(controlloDisponibilita(appuntamenti,appuntamento)){
+   if(controlloDisponibilita(appuntamenti,appuntamento, paziente, wait)){
     appuntamenti.add(appuntamento);
     appuntamenti_per_medico.put(id_medico, appuntamenti);
     System.out.println("appuntamento fissato nell'orario selezionato");
@@ -43,33 +44,71 @@ public class Agenda implements Serializable {
   }
 
  }
-
- private boolean controlloDisponibilita(List<Appuntamento> appuntamenti, Appuntamento appuntamento) {
+ private boolean controlloDisponibilita(List<Appuntamento> appuntamenti, Appuntamento appuntamento, List<Paziente> paziente, List<Wait> wait) {
   Scanner tastiera = new Scanner(System.in);
   for(Appuntamento d: appuntamenti){
    if(d.getOra_inizio()<=appuntamento.getOra_inizio() && appuntamento.getOra_inizio()<d.getOra_fine()
            && d.getOra_inizio()<appuntamento.getOra_fine() && appuntamento.getOra_fine()<=d.getOra_fine()
            && d.getData().equals(appuntamento.getData())
-           || d.getOra_inizio()==appuntamento.getOra_inizio()){
-    System.out.println("L'orario selezionato per questo appuntamento non è disponibile scegliere un altro orario");
-    System.out.println("inserisci ora inizio");
-    appuntamento.setOra_inizio(tastiera.nextInt());
-    System.out.println("inserisci ora fine");
-    appuntamento.setOra_fine(tastiera.nextInt());
-    controlloDisponibilita(appuntamenti, appuntamento);
+           || (d.getOra_inizio()==appuntamento.getOra_inizio() && d.getData().equals(appuntamento.getData()) )){
+    System.out.println("L'orario selezionato per questo appuntamento non è disponibile ");
+
+   boolean flag = true;
+    while(flag){
+     System.out.println(frase);
+     try {
+      String scelta = tastiera.nextLine();
+      switch (Integer.parseInt(scelta)) {
+       case 4: {
+        exit(1);
+       }
+       case 1: {
+        System.out.println("inserisci ora inizio");
+        appuntamento.setOra_inizio(Appuntamento.inserimentoOraInizio());
+        System.out.println("inserisci ora fine");
+        appuntamento.setOra_fine(Appuntamento.inserimentoOraFine(appuntamento.getOra_inizio()));
+        controlloDisponibilita(appuntamenti, appuntamento, paziente, wait);
+        flag = false;
+        break;
+       }
+
+       case 2: {
+        System.out.println("inserisci nuova data");
+        appuntamento.setData(Appuntamento.inserimentoData());
+        System.out.println("inserisci ora inizio");
+        appuntamento.setOra_inizio(Appuntamento.inserimentoOraInizio());
+        System.out.println("inserisci ora fine");
+        appuntamento.setOra_fine(Appuntamento.inserimentoOraFine(appuntamento.getOra_inizio()));
+        controlloDisponibilita(appuntamenti, appuntamento, paziente, wait);
+        flag = false;
+        break;
+
+       }
+       case 3: {
+        Paziente a = Paziente.ricercaPazientePerCf(paziente,appuntamento.getCf_paziente());
+        wait.add(new Wait(a,appuntamento.getData(), appuntamento.getOra_inizio(), appuntamento.getOra_fine(), appuntamento.getId_medico()));
+        System.out.println("appuntamento aggiunto alla wait List");
+        flag = false;
+        break;
+
+       }
+
+       default:{
+        throw new Exception("devi inserire un numero da 1 a 4");
+       }
+      }
+     }catch (NumberFormatException e){
+      System.out.println("devi inserire un numero compreso tra 1 e 4");
+     } catch (Exception e) {
+      System.out.println(e.getMessage());
+     }
+
+    }
    }
    }
 
   return true;
  }
-
-
- public String toStamp(int n) {
-  return "\n Agenda{ " +
-          "appuntamenti per medico = " + appuntamenti_per_medico.get(n)+
-          '}';
- }
-
  public void modificaAppuntamento(Agenda agenda, List<Paziente> paziente) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole modificare appuntamento");
@@ -85,12 +124,11 @@ public class Agenda implements Serializable {
   appuntamenti_per_medico.replace(id_medico, appuntamentoPerMedico);
 
  }
-
- public void eliminaAppuntamento(Agenda agenda, List<Wait> waitList) {
+ public void eliminaAppuntamento(Agenda agenda, List<Wait> waitList, List<Paziente> paziente ) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole eliminare appuntamento");
   String id_medico = tastiera.nextLine();
-  List<Appuntamento> appuntamentoPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
+  //List<Appuntamento> appuntamentoPerMedico = agenda.getAppuntamentiPerMedico().get(id_medico);
   System.out.println(agenda.getAppuntamentiPerMedico().get(id_medico).toString());
   System.out.println("inserisci numero appuntamento da eliminare");
   int a = tastiera.nextInt();
@@ -98,11 +136,10 @@ public class Agenda implements Serializable {
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   System.out.println("appuntamento eliminato");
   System.out.println("controllo se ci sono pazienti in lista d'attesa per la data selezionata");
-  controlloWaitList(appuntamento,waitList,agenda);
+  controlloWaitList(appuntamento,waitList,agenda, paziente, waitList);
 
  }
-
- private void controlloWaitList(Appuntamento appuntamento, List<Wait> waitList, Agenda agenda) {
+ private void controlloWaitList(Appuntamento appuntamento, List<Wait> waitList, Agenda agenda, List<Paziente> paziente, List<Wait> wait) {
   Scanner tastiera = new Scanner(System.in);
    for(Wait a: waitList){
     if(appuntamento.getId_medico().equals(a.getIdMedico())
@@ -111,20 +148,19 @@ public class Agenda implements Serializable {
             && a.getOraFine()<=appuntamento.getOra_fine()) {
      System.out.println("un paziente è in attesa per la data e l'ora selezionata vuoi contattarlo? [si/tutto il resto no]");
      String risposta = tastiera.nextLine();
-     if (risposta.toUpperCase().equals("SI")) {
+     if (risposta.equalsIgnoreCase("SI")) {
       System.out.println(a.getPazienteInAttesa().getCellulare()+"\n"+a.getPazienteInAttesa().getEmail());
       System.out.println("Il paziente è ancora disponibile?" );
       risposta = tastiera.nextLine();
-      if (risposta.toUpperCase().equals("SI")) {
+      if (risposta.equalsIgnoreCase("SI")) {
        Appuntamento sostituto = new Appuntamento(a.getData(),a.getPazienteInAttesa().getCodiceFiscale(),a.getIdMedico(), "sostituzione", a.getOraInizio(), a.getOraFine());
-       agenda.InsericiAppuntamentoInAgenda(a.getIdMedico(), sostituto);
+       agenda.InsericiAppuntamentoInAgenda(a.getIdMedico(), sostituto, paziente, wait);
       }
      }
     }
    }
 
  }
-
  public void ricercaAppuntamenti(Agenda agenda) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci id medico del quale si vuole effettuare una ricerca di appuntamente");
@@ -139,7 +175,6 @@ public class Agenda implements Serializable {
    case 3 : { ricercaPerOraInizio(appuntamentiPerMedico); break;}
   }
  }
-
  private void ricercaPerOraInizio(List<Appuntamento> appuntamentiPerMedico) {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci l'ora inizo dell'appuntamento che vuoi ricercare");
@@ -147,20 +182,18 @@ public class Agenda implements Serializable {
   int c = 0;
   for (Appuntamento a : appuntamentiPerMedico) {
    if (a.getOra_inizio()==oraI) {
-    System.out.println("ho trovato un appuntamento con quest'ora inizio -->" + a.toString() + "\ned ha indice " + c);
+    System.out.println("ho trovato un appuntamento con quest'ora inizio -->" + a + "\ned ha indice " + c);
    }
    c++;
   }
  }
-
  private void ricercaPerData(List<Appuntamento> appuntamentiPerMedico) {
-  Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci data che vuoi ricercare");
   Date d = inserimentoData();
   int c = 0;
   for (Appuntamento a : appuntamentiPerMedico) {
    if (a.getData().equals(d)) {
-    System.out.println("ho trovato un appuntamento con questa data -->" + a.toString() + "\ned ha indice " + c);
+    System.out.println("ho trovato un appuntamento con questa data -->" + a + "\ned ha indice " + c);
    }
    c++;
   }
@@ -190,8 +223,8 @@ public class Agenda implements Serializable {
   String codiceFiscaleR = tastiera.nextLine();
   int c=0;
   for(Appuntamento a: appuntamentiPerMedico){
-   if(a.getCf_paziente().toUpperCase().equals(codiceFiscaleR.toUpperCase())){
-    System.out.println("ho trovato un appuntamento con questo codice fiscale -->"+a.toString()+"\ned ha indice "+c);
+   if(a.getCf_paziente().equalsIgnoreCase(codiceFiscaleR)){
+    System.out.println("ho trovato un appuntamento con questo codice fiscale -->"+a+"\ned ha indice "+c);
    }
    c++;
   }

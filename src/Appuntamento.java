@@ -77,8 +77,11 @@ public class Appuntamento implements Serializable {
 
     @Override
     public String toString() {
-        return "Appuntamento{" +
-                "data='" + data + '\'' +
+        DateFormat formatoData = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ITALY);
+        //imposta che i calcoli di conversione della data siano rigorosi
+        formatoData.setLenient(false);
+        return "\nAppuntamento{" +
+                "data='" + formatoData.format(data) + '\'' +
                 ", cf_paziente='" + cf_paziente + '\'' +
                 ", id_medico='" + id_medico + '\'' +
                 ", descrizione='" + descrizione + '\'' +
@@ -92,7 +95,8 @@ public class Appuntamento implements Serializable {
         Date data = inserimentoData();
         System.out.println("inserisci codice fiscale del paziente");
         String cf_paziente = inserimentoCFPaziente();
-        cf_paziente = controlloCf(cf_paziente, paziente);//controllo che il codice fiscale corrisponda a un paziente già salvato
+        Paziente test = controlloCf(cf_paziente, paziente);//controllo che il codice fiscale corrisponda a un paziente già salvato
+        paziente.add(test);
         String id_dottore = IdMedico;
         System.out.println("inserisci descrizione");
         String descrizione = tastiera.nextLine();
@@ -105,24 +109,24 @@ public class Appuntamento implements Serializable {
         Appuntamento a = new Appuntamento(data,cf_paziente,id_dottore,descrizione, ora_inizio, ora_fine);
         return a;
     }
-    private static String controlloCf(String cf_paziente, List<Paziente> paziente) {
+    static Paziente controlloCf(String cf_paziente, List<Paziente> paziente) {
         while(true){
             for(Paziente a : paziente){
                 if(a.getCodiceFiscale().equals(cf_paziente)){
                     System.out.println("pazienta gia registrato, tutto ok! ");
-                    return a.getCodiceFiscale();
+                    return a;
                 }
             }
             System.out.println("non ho trovato  nessun paziente che corrisponde a questo codice ficale\n" +
                     "per favore Registrare prima il paziente poi procedere con l'inserimento dati per l'appuntamento");
             Paziente a = Paziente.registrazionePaziente(paziente);
-            return a.getCodiceFiscale();
+            return a;
 
         }
     }
 
 
-    private static int inserimentoOraFine(int ora_inizio) {
+    public static int inserimentoOraFine(int ora_inizio) {
         Scanner tastiera = new Scanner(System.in);
         System.out.println("inserisci ora fine appuntamento\n Studio aperto dalle 9 alle 20");
 
@@ -143,7 +147,7 @@ public class Appuntamento implements Serializable {
 
     }
 
-    private static int inserimentoOraInizio() {
+    public static int inserimentoOraInizio() {
         Scanner tastiera = new Scanner(System.in);
         System.out.println("inserisci ora inizio appuntamento\n Studio aperto dalle 9 alle 20");
 
@@ -218,13 +222,13 @@ public class Appuntamento implements Serializable {
 
     }
 
-    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda, Medico medicoOperante, List<Paziente> paziente){
+    public static void creaAppuntamenti(Scanner tastiera, Agenda agenda, Medico medicoOperante, List<Paziente> paziente, List<Wait> wait){
 
         Appuntamento appuntamento = creaAppuntamento(medicoOperante.getId_medico(),paziente);
         System.out.println("vuoi salvare il seguente appuntamento in agenda? [si/no]");
         String risposta = tastiera.nextLine();
         if(risposta.toUpperCase().equals("SI"))
-            agenda.InsericiAppuntamentoInAgenda(medicoOperante.getId_medico(), appuntamento);
+            agenda.InsericiAppuntamentoInAgenda(medicoOperante.getId_medico(), appuntamento, paziente, wait);
         else
             return;
 
@@ -244,11 +248,12 @@ public class Appuntamento implements Serializable {
             //imposta che i calcoli di conversione della data siano rigorosi
             formatoData.setLenient(false);
             d = formatoData.parse(s);
+            //s = formatoData.format(d);
+            //System.out.println(s);
+            return d;
         } catch (ParseException e) {
             System.out.println("Formato data non valido.");
         }
-
-        return d;
     }
     }
 
