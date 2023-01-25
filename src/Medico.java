@@ -18,9 +18,9 @@ public class Medico extends Persona implements Serializable {
     public static Medico registrazioneMedico(List<Medico> medici) {
         String cf = Appuntamento.inserimentoCFPaziente();
         cf= controlloCF(cf, medici);
-        String nome = Paziente.inserimentoNome();
-        String cognome = Paziente.inserimentoCognome();
-        String indirizzo = Paziente.inserimentoIndirizzo();
+        String nome = inserimentoNome();
+        String cognome = inserimentoCognome();
+        String indirizzo = inserimentoIndirizzo();
         String id = inserimentoId(medici);
         String password= inserimentoPassword();
 
@@ -94,8 +94,8 @@ public class Medico extends Persona implements Serializable {
 
     @Override
     public String toString() {
-        return "Medico{" +
-                "id_medico=" + id_medico + password+
+        return "\nMedico -->" +
+                "nome =" + this.getNome() + "  username " + id_medico+
                 '}';
     }
     public static Medico loginMedico(List<Medico> medici) {

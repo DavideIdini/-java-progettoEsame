@@ -29,6 +29,7 @@ public class Menu {
         Statistiche statistiche = new Statistiche(agenda, medico);
 
 
+
         try {
             FileInputStream fileInP = new FileInputStream("paziente");
             ObjectInputStream inP = new ObjectInputStream(fileInP);
@@ -65,7 +66,7 @@ public class Menu {
             c.printStackTrace();
             return;
         }
-
+        //System.out.println(medico.toString());
         Medico medicoOperante=preIntro(medico,paziente,null, agenda, wait);
         menu(agenda, wait, medicoOperante, medico, paziente, statistiche );
         salvaDati(medico, paziente, wait, agenda  );
@@ -217,6 +218,7 @@ public class Menu {
                     case 6: {
                         System.out.println(wait.toString());
                         wait.add(Wait.joinWaitList(paziente, agenda, medicoOperante,wait,paziente));
+                        break;
                     }
                     default:{
                         throw new Exception("devi inserire un numero da 1 a 7");

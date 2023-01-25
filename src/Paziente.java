@@ -65,14 +65,13 @@ public class Paziente extends Persona implements Serializable {
         }
 
     }
-
     public static String inserimentoCellulare() {
         Scanner tastiera = new Scanner(System.in);
         while(true) {
-            System.out.println("inserisci numero di cellulare");
+            System.out.println("inserisci numero di cellulare \n +39    ");
             String cell = tastiera.nextLine();
             try{
-                if(cell.isEmpty() || cell.length()!=10 ){
+                if(cell.length() != 10){
                     throw new Exception("numero di cellulare non valido.");
                 }
                 for(int i = 0; i<cell.length();i++){
@@ -85,7 +84,6 @@ public class Paziente extends Persona implements Serializable {
             }
         }
     }
-
     public static String insermentoEmail() {
         String email;
         Scanner tastiera = new Scanner(System.in);
@@ -113,87 +111,4 @@ public class Paziente extends Persona implements Serializable {
         }
     }
 
-    public static String inserimentoIndirizzo() {
-        String[] address = new String[3];
-        Scanner tastiera = new Scanner(System.in);
-        String indirizzo;
-        while(true) {
-            try {
-                System.out.println("Inserimento indirizzo");
-                System.out.println("Inserisci città");
-                address[0] = tastiera.nextLine().trim();
-                if (address[0].isEmpty() || address[0].length() == 0) {
-                    throw new Exception("Città non valida.");
-                }
-                for (int i = 0; i < address[0].length(); i++) {
-                    if (!Character.isAlphabetic(address[0].charAt(i)))
-                        throw new Exception("Città non valida.");
-                }
-                System.out.println("Inserisci via");
-                address[1] = tastiera.nextLine().trim();
-                if (address[1].isEmpty() || address[1].length() == 0) {
-                    throw new Exception("Via non valida.");
-                }
-                for (int i = 0; i < address[1].length(); i++) {
-                    if (!Character.isAlphabetic(address[1].charAt(i)))
-                        throw new Exception("Via non valida.");
-                }
-                System.out.println("Inserisci numero civico");
-                address[2] = tastiera.nextLine();
-                if (address[2].isEmpty() || address[2].length() == 0) {
-                    throw new Exception("Numero civico non valido.");
-                }
-                for (int i = 0; i < address[2].length(); i++) {
-                    if (!Character.isDigit(address[2].charAt(i)))
-                        throw new Exception("numero civico non valido.");
-                }
-                return indirizzo = address[0] + " " + "via " + address[1] + " " + address[2];
-            } catch (Exception e) {
-                System.out.println(e.getMessage() + " reinserisci  ");
-            }
-        }
-
-    }
-
-    public static String inserimentoCognome() {
-        Scanner tastiera = new Scanner(System.in);
-        while(true) {
-            System.out.println("inserisci Cognome");
-            String nome = tastiera.nextLine();
-            try{
-                if(nome.isEmpty() || nome.length()==0 ){
-                    throw new Exception("Cognome non valido.");
-                }
-                for(int i = 0; i<nome.length();i++){
-                    if(!Character.isAlphabetic(nome.charAt(i)))
-                        throw new Exception("Cognoome non valido");
-                }
-                return nome;
-            }catch (Exception e){
-                System.out.println(e.getMessage()+" reinseriscilo ");
-            }
-        }
-    }
-
-
-
-    public static String inserimentoNome() {
-        Scanner tastiera = new Scanner(System.in);
-        while(true) {
-            System.out.println("inserisci nome");
-            String nome = tastiera.nextLine();
-            try{
-                if(nome.isEmpty() || nome.length()==0 ){
-                    throw new Exception("Nome non valido.");
-                }
-                for(int i = 0; i<nome.length();i++){
-                    if(!Character.isAlphabetic(nome.charAt(i)))
-                        throw new Exception("Nome non valido");
-                }
-                return nome;
-            }catch (Exception e){
-                System.out.println(e.getMessage()+" reinseriscilo ");
-            }
-        }
-    }
 }
