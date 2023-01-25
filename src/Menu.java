@@ -210,14 +210,14 @@ public class Menu {
                     }
                     case 5:{
                         Statistiche.medicoPiuRichiesto(agenda, medico);
-                        Statistiche.OraPiùRichiesta(agenda, medico);
+                        Statistiche.oraPiùRichiesta(agenda, medico);
                         Statistiche.percentualeSostituzioni(agenda, medico);
                         break;
 
                     }
                     case 6: {
                         System.out.println(wait.toString());
-                        wait.add(Wait.joinWaitList(paziente, agenda, medicoOperante,wait,paziente));
+                        wait.add(Wait.joinWaitList(paziente, agenda, medicoOperante,wait));
                         break;
                     }
                     default:{

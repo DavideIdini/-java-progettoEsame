@@ -94,7 +94,7 @@ public class Appuntamento implements Serializable {
         System.out.println("Registra nuovo  appuntamento");
         Date data = inserimentoData();
         System.out.println("inserisci codice fiscale del paziente");
-        String cf_paziente = inserimentoCFPaziente();
+        String cf_paziente = inserimentoCF();
         Paziente test = controlloCf(cf_paziente, paziente);//controllo che il codice fiscale corrisponda a un paziente già salvato
         paziente.add(test);
         String id_dottore = IdMedico;
@@ -166,7 +166,7 @@ public class Appuntamento implements Serializable {
 
     }
 
-    public static String inserimentoCFPaziente() {
+    public static String inserimentoCF() {
         Scanner tastiera = new Scanner(System.in);
 
         while (true) {

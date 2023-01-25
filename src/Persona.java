@@ -51,7 +51,7 @@ public class Persona implements Serializable {
             System.out.println("inserisci nome");
             String nome = tastiera.nextLine();
             try{
-                if(nome.isEmpty() || nome.length()==0 ){
+                if(nome.isEmpty()){
                     throw new Exception("Nome non valido.");
                 }
                 for(int i = 0; i<nome.length();i++){

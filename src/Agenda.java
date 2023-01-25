@@ -137,25 +137,31 @@ public class Agenda implements Serializable {
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   System.out.println("appuntamento eliminato");
   System.out.println("controllo se ci sono pazienti in lista d'attesa per la data selezionata");
-  controlloWaitList(appuntamento,waitList,agenda, paziente, waitList);
+  controlloWaitList(appuntamento.getId_medico(), waitList,agenda, paziente);
 
  }
- private void controlloWaitList(Appuntamento appuntamento, List<Wait> waitList, Agenda agenda, List<Paziente> paziente, List<Wait> wait) {
+ private void controlloWaitList( String idMedico, List<Wait> waitList, Agenda agenda, List<Paziente> paziente) {
   Scanner tastiera = new Scanner(System.in);
-   for(Wait a: waitList){
-    if(appuntamento.getId_medico().equals(a.getIdMedico())
-            && appuntamento.getData().equals(a.getData())
-            && a.getOraInizio()>=appuntamento.getOra_inizio()
-            && a.getOraFine()<=appuntamento.getOra_fine()) {
+ Iterator<Wait> iterator = waitList.listIterator();
+   while(iterator.hasNext()){
+   Wait a = iterator.next();
+    Appuntamento b = new Appuntamento(a.getData(),a.getPazienteInAttesa().getCodiceFiscale(),a.getIdMedico(),"sostituzione" ,a.getOraInizio(),a.getOraFine());
+    if(Wait.controlloDisponibilita2(agenda.getAppuntamentiPerMedico().get(idMedico),b)) {
      System.out.println("un paziente è in attesa per la data e l'ora selezionata vuoi contattarlo? [si/tutto il resto no]");
      String risposta = tastiera.nextLine();
      if (risposta.equalsIgnoreCase("SI")) {
       System.out.println(a.getPazienteInAttesa().getCellulare()+"\n"+a.getPazienteInAttesa().getEmail());
       System.out.println("Il paziente è ancora disponibile?" );
       risposta = tastiera.nextLine();
-      if (risposta.equalsIgnoreCase("SI")) {
+      if (risposta.equalsIgnoreCase("SI [si/tutto il resto no]")) {
        Appuntamento sostituto = new Appuntamento(a.getData(),a.getPazienteInAttesa().getCodiceFiscale(),a.getIdMedico(), "sostituzione", a.getOraInizio(), a.getOraFine());
-       agenda.InsericiAppuntamentoInAgenda(a.getIdMedico(), sostituto, paziente, wait);
+       agenda.InsericiAppuntamentoInAgenda(a.getIdMedico(), sostituto, paziente, waitList);
+      }else{
+       System.out.println(waitList);
+       iterator.remove();
+      // waitList.remove(waitList.indexOf(a));
+       System.out.println(waitList);
+
       }
      }
     }

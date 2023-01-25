@@ -38,7 +38,7 @@ public class Paziente extends Persona implements Serializable {
         this.cellulare = cellulare;
     }
     public static Paziente registrazionePaziente(List<Paziente> pazienti){
-        String cf = Appuntamento.inserimentoCFPaziente();
+        String cf = Appuntamento.inserimentoCF();
         cf = controlloCfPaziente(cf, pazienti);
         if(cf.isEmpty())
             return null;

@@ -34,7 +34,7 @@ public class Statistiche {
 
 
     }
-   public static void OraPiùRichiesta(Agenda agenda, List<Medico> medico){
+   public static void oraPiùRichiesta(Agenda agenda, List<Medico> medico){
         HashMap<Integer,Integer> occorrenzaOre = new HashMap<>();
         int ore,frequenza=0,max=0,pos = 0;
         for(Medico a : medico){

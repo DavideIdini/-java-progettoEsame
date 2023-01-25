@@ -16,7 +16,7 @@ public class Medico extends Persona implements Serializable {
     }
 
     public static Medico registrazioneMedico(List<Medico> medici) {
-        String cf = Appuntamento.inserimentoCFPaziente();
+        String cf = Appuntamento.inserimentoCF();
         cf= controlloCF(cf, medici);
         String nome = inserimentoNome();
         String cognome = inserimentoCognome();
@@ -35,7 +35,7 @@ public class Medico extends Persona implements Serializable {
         for(Medico a: medici){
             if(a.getCodiceFiscale().equals(cf)){
                 System.out.println("medico gia registrato con questo codice fiscale, inserirne uno valido per favore");
-                cf = Appuntamento.inserimentoCFPaziente();
+                cf = Appuntamento.inserimentoCF();
                 cf= controlloCF(cf, medici);
             }
         }

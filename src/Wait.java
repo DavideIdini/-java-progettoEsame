@@ -58,11 +58,13 @@ public class Wait implements Serializable {
     public void setIdMedico(String idMedico) {
         this.idMedico = idMedico;
     }
-    public static Wait joinWaitList(List<Paziente> pazienti, Agenda agenda, Medico medicoOperante, List<Wait> wait, List<Paziente> paziente){
+    public static Wait joinWaitList(List<Paziente> pazienti, Agenda agenda, Medico medicoOperante, List<Wait> wait){
         Scanner tastiera = new Scanner(System.in);
         System.out.println("inserimento dati paziente da aggiungere alla waitList");
-        String cf_paziente = Appuntamento.inserimentoCFPaziente();
-        Paziente paziente1 = Appuntamento.controlloCf(cf_paziente, paziente);
+        String cf_paziente = Appuntamento.inserimentoCF();
+        Paziente paziente1 = Appuntamento.controlloCf(cf_paziente, pazienti);
+        if(!pazienti.contains(paziente1))
+            pazienti.add(paziente1);
         Date date = Appuntamento.inserimentoData();
         System.out.println("inserisci:ora inizio ora fine");
         int oraI= Appuntamento.inserimentoOraInizio();
@@ -74,7 +76,7 @@ public class Wait implements Serializable {
                     "\n[si/tutto il resto no]");
             String risposta = tastiera.nextLine();
             if(risposta.equalsIgnoreCase("si"))
-                agenda.InsericiAppuntamentoInAgenda(idM, w, paziente, wait);
+                agenda.InsericiAppuntamentoInAgenda(idM, w, pazienti, wait);
         }
 
         Wait a = new Wait(paziente1, date,oraI, oraF, idM );
