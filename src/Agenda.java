@@ -136,7 +136,8 @@ public class Agenda implements Serializable {
   Appuntamento appuntamento = agenda.getAppuntamentiPerMedico().get(id_medico).get(a);
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   System.out.println("appuntamento eliminato");
-  System.out.println("controllo se ci sono pazienti in lista d'attesa per la data selezionata");
+  System.out.println("Vuoi controllare se ci sono pazienti in lista d'attesa per la data selezionata [si/tutto il resto no]");
+  if(tastiera.nextLine().equalsIgnoreCase("SI"))
   controlloWaitList(appuntamento.getId_medico(), waitList,agenda, paziente);
 
  }
@@ -151,13 +152,15 @@ public class Agenda implements Serializable {
      String risposta = tastiera.nextLine();
      if (risposta.equalsIgnoreCase("SI")) {
       System.out.println(a.getPazienteInAttesa().getCellulare()+"\n"+a.getPazienteInAttesa().getEmail());
-      System.out.println("Il paziente è ancora disponibile?" );
+      System.out.println("Il paziente è ancora disponibile? [si/tutto il resto no]" );
       risposta = tastiera.nextLine();
-      if (risposta.equalsIgnoreCase("SI [si/tutto il resto no]")) {
+      if (risposta.equalsIgnoreCase("SI")) {
        Appuntamento sostituto = new Appuntamento(a.getData(),a.getPazienteInAttesa().getCodiceFiscale(),a.getIdMedico(), "sostituzione", a.getOraInizio(), a.getOraFine());
        agenda.InsericiAppuntamentoInAgenda(a.getIdMedico(), sostituto, paziente, waitList);
-      }else{
+       iterator.remove();
        System.out.println(waitList);
+      }else{
+
        iterator.remove();
       // waitList.remove(waitList.indexOf(a));
        System.out.println(waitList);
