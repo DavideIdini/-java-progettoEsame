@@ -189,24 +189,26 @@ public class Agenda implements Serializable {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci l'ora inizo dell'appuntamento che vuoi ricercare");
   int oraI = tastiera.nextInt();
-  int c = 0;
+  boolean flag = true;
   for (Appuntamento a : appuntamentiPerMedico) {
    if (a.getOra_inizio()==oraI) {
-    System.out.println("ho trovato un appuntamento con quest'ora inizio -->" + a + "\ned ha indice " + c);
+    System.out.println("ho trovato un appuntamento con quest'ora inizio -->" + a + "\ned ha indice " + appuntamentiPerMedico.indexOf(a));
+    flag = false;
    }
-   c++;
   }
+  if(flag) System.out.println("non ho trovato appuntamenti ");
  }
  private void ricercaPerData(List<Appuntamento> appuntamentiPerMedico) {
   System.out.println("inserisci data che vuoi ricercare");
   Date d = inserimentoData();
-  int c = 0;
+  boolean flag = true;
   for (Appuntamento a : appuntamentiPerMedico) {
    if (a.getData().equals(d)) {
-    System.out.println("ho trovato un appuntamento con questa data -->" + a + "\ned ha indice " + c);
+    flag = false;
+    System.out.println("ho trovato un appuntamento con questa data -->" + a + "\ned ha indice " + appuntamentiPerMedico.indexOf(a));
    }
-   c++;
   }
+  if(flag) System.out.println("non ho trovato appuntamenti");
  }
  private static Date inserimentoData() {
   String s;
@@ -231,12 +233,13 @@ public class Agenda implements Serializable {
   Scanner tastiera = new Scanner(System.in);
   System.out.println("inserisci codice fiscale paziente che vuoi ricercare");
   String codiceFiscaleR = tastiera.nextLine();
-  int c=0;
+  boolean flag = true;
   for(Appuntamento a: appuntamentiPerMedico){
    if(a.getCf_paziente().equalsIgnoreCase(codiceFiscaleR)){
-    System.out.println("ho trovato un appuntamento con questo codice fiscale -->"+a+"\ned ha indice "+c);
+    flag = false;
+    System.out.println("ho trovato un appuntamento con questo codice fiscale -->"+a+"\ned ha indice "+appuntamentiPerMedico.indexOf(a));
    }
-   c++;
   }
+  if(flag) System.out.println("non ho trovato appuntamenti per i criteri selezionati");
  }
 }

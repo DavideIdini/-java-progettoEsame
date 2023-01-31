@@ -46,9 +46,7 @@ public class Menu {
             FileInputStream fileInW = new FileInputStream("wait");
             ObjectInputStream inW = new ObjectInputStream(fileInW);
             wait = (List<Wait>) inW.readObject();
-
-
-
+            
           inA.close();
             fileInA.close();
             inP.close();
