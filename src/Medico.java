@@ -5,13 +5,13 @@ import java.util.Scanner;
 public class Medico extends Persona implements Serializable {
 
     private String id_medico;
-    private String password;
+    final private String Password;
 
 
     public Medico(String codiceFiscale, String nome, String cognome, String indirizzo, String id_medico,String password) {
         super(codiceFiscale, nome, cognome, indirizzo);
         this.id_medico = id_medico;
-        this.password = password;
+        this.Password = password;
 
     }
 
@@ -43,7 +43,7 @@ public class Medico extends Persona implements Serializable {
     }
 
     public String getPassword() {
-        return password;
+        return Password;
     }
 
     private static String inserimentoPassword() {
@@ -115,7 +115,7 @@ public class Medico extends Persona implements Serializable {
 
                 System.out.println("Inserisci password");
                 String pass = tastiera.nextLine();
-                if(id.isEmpty() )
+                if( id.isEmpty() )
                     throw new Exception("password vuota");
 
                 for (Medico a : medici){
@@ -131,7 +131,7 @@ public class Medico extends Persona implements Serializable {
                 Scanner tastiera = new Scanner(System.in);
                 System.out.println(e.getMessage()+" digita si se vuoi riprovare a effettuare il login");
                 String risposta = tastiera.nextLine();
-                if(!risposta.toUpperCase().equals("SI"))
+                if(!risposta.equalsIgnoreCase("SI"))
                     flag = false;
 
             }
