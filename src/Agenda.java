@@ -136,9 +136,16 @@ public class Agenda implements Serializable {
   Appuntamento appuntamento = agenda.getAppuntamentiPerMedico().get(id_medico).get(a);
   agenda.getAppuntamentiPerMedico().get(id_medico).remove(a);
   System.out.println("appuntamento eliminato");
+  try {
+   Thread.sleep(1000);
+  } catch (InterruptedException e) {
+   throw new RuntimeException(e);
+  }
   System.out.println("Vuoi controllare se ci sono pazienti in lista d'attesa per la data selezionata [si/tutto il resto no]");
   if(tastiera.nextLine().equalsIgnoreCase("SI"))
   controlloWaitList(appuntamento.getId_medico(), waitList,agenda, paziente);
+  else
+   System.out.println("Non ci sono pazienti in waitList questa volta");
 
  }
  private void controlloWaitList( String idMedico, List<Wait> waitList, Agenda agenda, List<Paziente> paziente) {
